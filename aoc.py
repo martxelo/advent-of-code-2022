@@ -21,7 +21,7 @@ def day2():
             other = df.a.replace({'A':'r', 'B':'p', 'C':'s'}),
             me = df.b.replace({'X':'r', 'Y':'p', 'Z':'s'}),
             match = lambda x: x.other + x.me,
-            selec_points = lambda x: x.me.replace({'r':1,'p':2,'s':3}),
+            selec_points = lambda x: x.me.replace({'r': 1,'p': 2,'s': 3}),
             draw_points = lambda x: 3*(x.other == x.me),
             victory_points = lambda x: 6*x.match.isin(['rp', 'ps', 'sr'])
             )
@@ -40,7 +40,7 @@ def day2():
             victory = lambda x: x.other.replace({'p':'s', 'r':'p', 's': 'r'}).where(x.result=='victory'),
             me = lambda x: x.loss.combine_first(x.draw).combine_first(x.victory),
             match = lambda x: x.other + x.me,
-            selec_points = lambda x: x.me.replace({'r':1,'p':2,'s':3}),
+            selec_points = lambda x: x.me.replace({'r': 1,'p': 2,'s': 3}),
             draw_points = lambda x: 3*(x.other == x.me),
             victory_points = lambda x: 6*x.match.isin(['rp', 'ps', 'sr'])
             )
