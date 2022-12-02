@@ -18,10 +18,10 @@ def day2():
     sol1 = (
         df
         .assign(
-            other = df.a.replace({'A':'r', 'B':'p', 'C':'s'}),
-            me = df.b.replace({'X':'r', 'Y':'p', 'Z':'s'}),
+            other = df.a.replace({'A': 'r', 'B': 'p', 'C': 's'}),
+            me = df.b.replace({'X': 'r', 'Y': 'p', 'Z': 's'}),
             match = lambda x: x.other + x.me,
-            selec_points = lambda x: x.me.replace({'r': 1,'p': 2,'s': 3}),
+            selec_points = lambda x: x.me.replace({'r': 1, 'p': 2, 's': 3}),
             draw_points = lambda x: 3*(x.other == x.me),
             victory_points = lambda x: 6*x.match.isin(['rp', 'ps', 'sr'])
             )
@@ -33,14 +33,14 @@ def day2():
     sol2 = (
         df
         .assign(
-            other = df.a.replace({'A':'r', 'B':'p', 'C':'s'}),
-            result = df.b.replace({'X':'loss', 'Y':'draw', 'Z':'victory'}),
-            loss = lambda x: x.other.replace({'p':'r', 'r':'s', 's': 'p'}).where(x.result=='loss'),
+            other = df.a.replace({'A': 'r', 'B': 'p', 'C': 's'}),
+            result = df.b.replace({'X': 'loss', 'Y': 'draw', 'Z': 'victory'}),
+            loss = lambda x: x.other.replace({'p': 'r', 'r': 's', 's': 'p'}).where(x.result=='loss'),
             draw = lambda x: x.other.where(x.result=='draw'),
-            victory = lambda x: x.other.replace({'p':'s', 'r':'p', 's': 'r'}).where(x.result=='victory'),
+            victory = lambda x: x.other.replace({'p': 's', 'r': 'p', 's': 'r'}).where(x.result=='victory'),
             me = lambda x: x.loss.combine_first(x.draw).combine_first(x.victory),
             match = lambda x: x.other + x.me,
-            selec_points = lambda x: x.me.replace({'r': 1,'p': 2,'s': 3}),
+            selec_points = lambda x: x.me.replace({'r': 1, 'p': 2, 's': 3}),
             draw_points = lambda x: 3*(x.other == x.me),
             victory_points = lambda x: 6*x.match.isin(['rp', 'ps', 'sr'])
             )
