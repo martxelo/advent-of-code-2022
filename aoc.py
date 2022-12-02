@@ -3,7 +3,7 @@ import pandas as pd
 
 def day1():
 
-    cal_per_elf = sorted([sum([int(x) for x in line.split('\n')]) for line in open('input/day1.txt', 'r').read()[:-1].split('\n\n')])
+    cal_per_elf = sorted([sum([int(cal) for cal in elf.split('\n')]) for elf in open('input/day1.txt', 'r').read()[:-1].split('\n\n')])
     
     print('#################')
     print(f'Day 1.1 = {cal_per_elf[-1]}')
