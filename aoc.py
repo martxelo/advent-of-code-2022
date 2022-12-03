@@ -1,3 +1,5 @@
+import string
+
 import pandas as pd
 
 
@@ -24,11 +26,11 @@ def day2():
             selec_points = lambda x: x.me.replace({'r': 1, 'p': 2, 's': 3}),
             draw_points = lambda x: 3*(x.other == x.me),
             victory_points = lambda x: 6*x.match.isin(['rp', 'ps', 'sr'])
-            )
+        )
         .select_dtypes('number')
         .sum()
         .sum()
-        )
+    )
     
     sol2 = (
         df
@@ -41,13 +43,57 @@ def day2():
             me = lambda x: x.loss.combine_first(x.draw).combine_first(x.victory),
             match = lambda x: x.other + x.me,
             selec_points = lambda x: x.me.replace({'r': 1, 'p': 2, 's': 3}),
-            draw_points = lambda x: 3*(x.other == x.me),
-            victory_points = lambda x: 6*x.match.isin(['rp', 'ps', 'sr'])
+            draw_points = lambda x: 3 * (x.other == x.me),
+            victory_points = lambda x: 6 * x.match.isin(['rp', 'ps', 'sr'])
             )
         .select_dtypes('number')
         .sum()
         .sum()
+    )
+
+    print('#################')
+    print(f'Day 2.1 = {sol1}')
+    print(f'Day 2.2 = {sol2}')
+
+
+def day3():
+    
+    df = pd.read_csv('input/day3.txt', header=None, names=['rucksack'])
+
+    sol1 = (
+        df
+        .assign(
+            comp_1 = df.rucksack.apply(lambda x: set(x[:len(x)//2])),
+            comp_2 = df.rucksack.apply(lambda x: set(x[len(x)//2:])),
+            repeated = lambda x: [(a & b).pop() for a, b in zip(x.comp_1, x.comp_2)],
+            is_upper = lambda x: x.repeated.str.isupper(),
+            priority = lambda x: 26 * x.is_upper + x.repeated.apply(lambda y: 1 + string.ascii_lowercase.index(y.lower()))
         )
+        .select_dtypes('number')
+        .sum()
+        .sum()
+    )
+
+    sol2 = (
+        df
+        .assign(
+            rucksack2 = df.rucksack.shift(-1),
+            rucksack3 = df.rucksack.shift(-2)
+        )
+        .dropna()
+        .iloc[range(0, df.shape[0], 3)]
+        .assign(
+            set1 = df.rucksack.apply(lambda x: set(x)),
+            set2 = lambda x: x.rucksack2.apply(lambda x: set(x)),
+            set3 = lambda x: x.rucksack3.apply(lambda x: set(x)),
+            common = lambda x: [(a & b & c).pop() for a, b, c in zip(x.set1, x.set2, x.set3)],
+            is_upper = lambda x: x.common.str.isupper(),
+            priority = lambda x: 26 * x.is_upper + x.common.apply(lambda y: 1 + string.ascii_lowercase.index(y.lower()))
+        )
+        .select_dtypes('number')
+        .sum()
+        .sum()
+    )
 
     print('#################')
     print(f'Day 2.1 = {sol1}')
@@ -57,5 +103,6 @@ def day2():
 
 if __name__ == '__main__':
 
-    day1()
-    day2()
+    # day1()
+    # day2()
+    day3()
