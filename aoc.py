@@ -67,7 +67,7 @@ def day3():
             comp_2 = df.rucksack.apply(lambda x: set(x[len(x)//2:])),
             repeated = lambda x: [(a & b).pop() for a, b in zip(x.comp_1, x.comp_2)],
             is_upper = lambda x: x.repeated.str.isupper(),
-            priority = lambda x: 26 * x.is_upper + x.repeated.apply(lambda y: 1 + string.ascii_lowercase.index(y.lower()))
+            priority = lambda x: 26 * x.is_upper + x.repeated.apply(lambda x: 1 + string.ascii_lowercase.index(x.lower()))
         )
         .select_dtypes('number')
         .sum()
@@ -83,12 +83,12 @@ def day3():
         .dropna()
         .iloc[range(0, df.shape[0], 3)]
         .assign(
-            set1 = df.rucksack.apply(lambda x: set(x)),
+            set1 = lambda x: x.rucksack.apply(lambda x: set(x)),
             set2 = lambda x: x.rucksack2.apply(lambda x: set(x)),
             set3 = lambda x: x.rucksack3.apply(lambda x: set(x)),
             common = lambda x: [(a & b & c).pop() for a, b, c in zip(x.set1, x.set2, x.set3)],
             is_upper = lambda x: x.common.str.isupper(),
-            priority = lambda x: 26 * x.is_upper + x.common.apply(lambda y: 1 + string.ascii_lowercase.index(y.lower()))
+            priority = lambda x: 26 * x.is_upper + x.common.apply(lambda x: 1 + string.ascii_lowercase.index(x.lower()))
         )
         .select_dtypes('number')
         .sum()
@@ -103,6 +103,6 @@ def day3():
 
 if __name__ == '__main__':
 
-    # day1()
+    day1()
     # day2()
     day3()
