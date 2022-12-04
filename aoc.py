@@ -96,13 +96,47 @@ def day3():
     )
 
     print('#################')
-    print(f'Day 2.1 = {sol1}')
-    print(f'Day 2.2 = {sol2}')
+    print(f'Day 3.1 = {sol1}')
+    print(f'Day 3.2 = {sol2}')
+
+
+def day4():
+
+    df = pd.read_csv('input/day4.txt', header=None, names=['elf1', 'elf2'])
+
+    sol1 = (
+        df
+        .assign(
+            set1 = lambda x: x.elf1.apply(lambda x: eval('set(range(' + x.replace('-', ',') + '+1))')),
+            set2 = lambda x: x.elf2.apply(lambda x: eval('set(range(' + x.replace('-', ',') + '+1))')),
+            intersection = lambda x: [(a & b) for a, b in zip(x.set1, x.set2)],
+            overlap = lambda x: (x.set1 == x.intersection) | (x.set2 == x.intersection)
+        )
+        ['overlap']
+        .sum()
+    )
+
+    sol2 = (
+        df
+        .assign(
+            set1 = lambda x: x.elf1.apply(lambda x: eval('set(range(' + x.replace('-', ',') + '+1))')),
+            set2 = lambda x: x.elf2.apply(lambda x: eval('set(range(' + x.replace('-', ',') + '+1))')),
+            intersection = lambda x: [(a & b) for a, b in zip(x.set1, x.set2)],
+            overlap = lambda x: x.intersection.apply(lambda x: len(x) > 0)
+        )
+        ['overlap']
+        .sum()
+    )
+
+    print('#################')
+    print(f'Day 4.1 = {sol1}')
+    print(f'Day 4.2 = {sol2}')
 
 
 
 if __name__ == '__main__':
 
     day1()
-    # day2()
+    day2()
     day3()
+    day4()
