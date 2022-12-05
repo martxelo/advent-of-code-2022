@@ -1,5 +1,5 @@
 import string
-
+from itertools import product
 import pandas as pd
 
 
@@ -133,10 +133,36 @@ def day4():
     print(f'Day 4.2 = {sol2}')
 
 
+def day5():
+    
+    lines = [line[:-1] for line in open('input/day5.txt', 'r').readlines()]
+    
+    moves = [[int(x) for x in line.split(' ')[slice(1,6,2)]] for line in lines[10:]]
+
+    pile = dict(zip(range(1, 10), ['']*10))
+    for line, (i, j) in product(lines[:8][::-1], zip(range(1, 10), range(1, len(lines[0]), 4))):
+        pile[i] += line[j].replace(' ', '')
+
+    def rearrange(pile, invert=True):
+        for count, _from, _to in moves:
+            take = pile[_from][-count:]
+            if invert: take = take[::-1]
+            pile[_from] = pile[_from][:-count]
+            pile[_to] += take
+        return ''.join([pile[i][-1] for i in range(1, 10)])
+    
+    sol1 = rearrange(pile.copy(), invert=True)
+    sol2 = rearrange(pile.copy(), invert=False)
+    
+    print('#################')
+    print(f'Day 5.1 = {sol1}')
+    print(f'Day 5.2 = {sol2}')
+    
 
 if __name__ == '__main__':
 
-    day1()
-    day2()
-    day3()
-    day4()
+    # day1()
+    # day2()
+    # day3()
+    # day4()
+    day5()
