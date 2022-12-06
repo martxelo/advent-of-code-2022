@@ -166,12 +166,8 @@ def day6():
     sol1 = (
         df
         .assign(
-            **{f'pos{lag}' : df.pos0.shift(lag) for lag in range(1, 4)}
-        )
-        .dropna()
-        .assign(
-            joined = lambda x: x.sum(axis=1),
-            length = lambda x: x.joined.apply(lambda x: len(set(x))),
+            **{f'pos{lag}' : df.pos0.shift(lag) for lag in range(1, 4)},
+            length = lambda x: x.nunique(axis=1)
         )
         .query('length == 4')
         .index[0]
@@ -181,12 +177,8 @@ def day6():
     sol2 = (
         df
         .assign(
-            **{f'pos{lag}' : df.pos0.shift(lag) for lag in range(1, 14)}
-        )
-        .dropna()
-        .assign(
-            joined = lambda x: x.sum(axis=1),
-            length = lambda x: x.joined.apply(lambda x: len(set(x))),
+            **{f'pos{lag}' : df.pos0.shift(lag) for lag in range(1, 14)},
+            length = lambda x: x.nunique(axis=1)
         )
         .query('length == 14')
         .index[0]
