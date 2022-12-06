@@ -157,6 +157,45 @@ def day5():
     print('#################')
     print(f'Day 5.1 = {sol1}')
     print(f'Day 5.2 = {sol2}')
+
+
+def day6():
+
+    df = pd.DataFrame([char for char in open('input/day6.txt', 'r').read()[:-1]], columns=['pos0'])
+
+    sol1 = (
+        df
+        .assign(
+            **{f'pos{lag}' : df.pos0.shift(lag) for lag in range(1, 4)}
+        )
+        .dropna()
+        .assign(
+            joined = lambda x: x.sum(axis=1),
+            length = lambda x: x.joined.apply(lambda x: len(set(x))),
+        )
+        .query('length == 4')
+        .index[0]
+        + 1
+    )
+
+    sol2 = (
+        df
+        .assign(
+            **{f'pos{lag}' : df.pos0.shift(lag) for lag in range(1, 14)}
+        )
+        .dropna()
+        .assign(
+            joined = lambda x: x.sum(axis=1),
+            length = lambda x: x.joined.apply(lambda x: len(set(x))),
+        )
+        .query('length == 14')
+        .index[0]
+        + 1
+    )
+
+    print('#################')
+    print(f'Day 6.1 = {sol1}')
+    print(f'Day 6.2 = {sol2}')
     
 
 if __name__ == '__main__':
@@ -165,4 +204,5 @@ if __name__ == '__main__':
     # day2()
     # day3()
     # day4()
-    day5()
+    # day5()
+    day6()
