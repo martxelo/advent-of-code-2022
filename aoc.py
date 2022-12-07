@@ -1,4 +1,5 @@
 import string
+import re
 from itertools import product
 import pandas as pd
 
@@ -190,6 +191,37 @@ def day6():
     print(f'Day 6.2 = {sol2}')
     
 
+def day7():
+
+    lines = [line[:-1] for line in open('input/day7.txt', 'r').readlines()]
+
+    re_file = re.compile('\d+ \D')
+
+    folders = {}
+    path = '/'
+
+    for line in lines:
+        if re_file.findall(line):
+            n = len(path.split('/'))
+            subpaths = ['/'] + ['/'.join(path.split('/')[:i]) + '/' for i in range(2,n)]
+            for subpath in subpaths:
+                if subpath not in folders: folders[subpath] = 0
+                folders[subpath] += int(line.split()[0])
+        elif line == '$ cd ..':
+            path = path.rsplit('/', maxsplit=2)[0] + '/'
+        elif line == '$ cd /':
+            path = '/'
+        elif line.startswith('$ cd '):
+            path += line.split()[2] + '/'
+
+    sol1 = sum([size for size in folders.values() if size <= 100_000])
+    sol2 = min([size for size in folders.values() if size >= folders['/'] - 70_000_000 + 30_000_000])
+
+    print('#################')
+    print(f'Day 7.1 = {sol1}')
+    print(f'Day 7.2 = {sol2}')
+
+
 if __name__ == '__main__':
 
     # day1()
@@ -197,4 +229,5 @@ if __name__ == '__main__':
     # day3()
     # day4()
     # day5()
-    day6()
+    # day6()
+    day7()
