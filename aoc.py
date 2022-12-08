@@ -282,8 +282,8 @@ def day8():
     sol2 = scenic(df)
     
     print('#################')
-    print(f'Day 7.1 = {sol1}')
-    print(f'Day 7.2 = {sol2}')
+    print(f'Day 8.1 = {sol1}')
+    print(f'Day 8.2 = {sol2}')
 
 
 if __name__ == '__main__':
