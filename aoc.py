@@ -2,6 +2,7 @@ import string
 import re
 from itertools import product
 import pandas as pd
+import numpy as np
 
 
 def day1():
@@ -222,6 +223,69 @@ def day7():
     print(f'Day 7.2 = {sol2}')
 
 
+def day8():
+
+    lines = [list(line[:-1]) for line in open('input/day8.txt', 'r').readlines()]
+    df = pd.DataFrame(lines).astype(float)
+
+    def visible(df, transpose=False, order=1):
+        df_tmp = df.copy()
+        if transpose: df_tmp = df_tmp.T
+        result = (
+            df_tmp
+            .iloc[::order]
+            .rolling(window=df.shape[0], min_periods=1)
+            .max()
+            .shift(1)
+            .fillna(-1)
+            .iloc[::order]
+            < df_tmp
+        )
+        if transpose: result = result.T
+        return result
+
+    up = visible(df, transpose=False, order=1)
+    down = visible(df, transpose=False, order=-1)
+    left = visible(df, transpose=True, order=1)
+    right = visible(df, transpose=True, order=-1)
+    
+    sol1 = (up | down | left | right).sum().sum()
+
+    def scenic(df):
+        vals = df.values
+        n = df.shape[0]
+        sc_up = np.zeros(df.shape)
+        sc_down = np.zeros(df.shape)
+        sc_left = np.zeros(df.shape)
+        sc_right = np.zeros(df.shape)
+
+        for i, j in product(range(1, n-1), repeat=2):            
+            for k in range(i)[::-1]:
+                if vals[k, j] >= vals[i,j]:
+                    break
+            sc_up[i, j] = i - k
+            for k in range(i+1, n):
+                if vals[k, j] >= vals[i,j]:
+                    break
+            sc_down[i, j] += k - i
+            for k in range(j)[::-1]:
+                if vals[i, k] >= vals[i,j]:
+                    break
+            sc_left[i, j] = j - k
+            for k in range(j+1, n):
+                if vals[i, k] >= vals[i,j]:
+                    break
+            sc_right[i, j] += k - j
+        
+        return (sc_up*sc_down*sc_left*sc_right).max().astype(int)
+
+    sol2 = scenic(df)
+    
+    print('#################')
+    print(f'Day 7.1 = {sol1}')
+    print(f'Day 7.2 = {sol2}')
+
+
 if __name__ == '__main__':
 
     # day1()
@@ -230,4 +294,5 @@ if __name__ == '__main__':
     # day4()
     # day5()
     # day6()
-    day7()
+    # day7()
+    day8()
