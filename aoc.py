@@ -286,6 +286,40 @@ def day8():
     print(f'Day 8.2 = {sol2}')
 
 
+def day9():
+
+    moves = ''.join([line.split()[0]*int(line.split()[1]) for line in open('input/day9.txt').readlines()])
+
+    def update_pos(move, positions, index):
+        head, tail = index, index + 1
+        if move == 'R': positions[head] = (positions[head][0] + 1, positions[head][1])
+        elif move == 'L': positions[head] = (positions[head][0] - 1, positions[head][1])
+        elif move == 'U': positions[head] = (positions[head][0], positions[head][1] + 1)
+        elif move == 'D': positions[head] = (positions[head][0], positions[head][1] - 1)
+
+        distance = (positions[head][0] - positions[tail][0])**2 + (positions[head][1] - positions[tail][1])**2
+        
+        if  distance >= 4:
+            if move == 'R': positions[tail] = (positions[tail][0] + 1, positions[head][1])
+            elif move == 'L': positions[tail] = (positions[tail][0] - 1, positions[head][1])
+            elif move == 'U': positions[tail] = (positions[head][0], positions[tail][1] + 1)
+            elif move == 'D': positions[tail] = (positions[head][0], positions[tail][1] - 1)
+
+
+    positions = [(0, 0), (0, 0)]
+    tail_pos = {positions[-1]}
+
+    for move in moves:
+
+        update_pos(move, positions, 0)
+        tail_pos = tail_pos.union({positions[-1]})
+
+    sol1 = len(tail_pos)
+        
+    print('#################')
+    print(f'Day 9.1 = {sol1}')
+
+
 if __name__ == '__main__':
 
     # day1()
@@ -295,4 +329,5 @@ if __name__ == '__main__':
     # day5()
     # day6()
     # day7()
-    day8()
+    # day8()
+    day9()
